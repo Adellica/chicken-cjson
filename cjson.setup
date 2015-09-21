@@ -1,0 +1,6 @@
+;; -*- scheme -*-
+
+(compile -s cjson.scm -J)
+(compile -s cjson.import.scm)
+
+(install-extension 'cjson '("cjson.so" "cjson.import.so"))
