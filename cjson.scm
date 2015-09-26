@@ -14,7 +14,7 @@
   (lambda (x) (and x (%make-cjson x))))
 
 ;; memory-leaking version. must call free on returned object sometime.
-(define str->cjson*
+(define string->cjson*
   (foreign-lambda* cjson ((nonnull-c-string json_str))
                    "return(cJSON_Parse(json_str));"))
 
@@ -25,13 +25,13 @@
 
 ;; finelizers don't always work out too well if there are many of them
 ;; (according to docs). how many are too many?
-(define (str->cjson str)
-  (set-finalizer! (let ((cjson (str->cjson* str)))
+(define (string->cjson str)
+  (set-finalizer! (let ((cjson (string->cjson* str)))
                     (if cjson cjson
                         (error "unparseable json" str)))
                   cjson-free))
 
-(define (cjson->str cjson #!optional (pp #t))
+(define (cjson->string cjson #!optional (pp #t))
   ((if pp
        (foreign-lambda* c-string* ((cjson json)) "return (cJSON_Print(json));")
        (foreign-lambda* c-string* ((cjson json)) "return (cJSON_PrintUnformatted(json));"))
@@ -89,8 +89,8 @@
     (else (error "unknown cjson type" (cjson-type cjson)))))
 
 ;; finalizers are expensive. this version avoids their use:
-(define (str->json str)
-  (let* ((j (str->cjson* str))
+(define (string->json str)
+  (let* ((j (string->cjson* str))
          (s (cjson-schemify j)))
     (cjson-free j)
     s))
