@@ -15,3 +15,8 @@
             (a . 1.0))
            ((x . -1.0)))
        (string->json "[{\"a\" : 1 , \"b\" : 2}, {\"x\" : -1 }]")))
+
+(test-group
+ "cjson->string"
+ (define input "{\"a\":12,\"b\":[1,2,3]}")
+ (test "str->cjson->str" input (cjson->string (string->cjson input) #f)))
