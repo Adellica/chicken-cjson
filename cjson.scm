@@ -95,4 +95,9 @@
     (cjson-free j)
     s))
 
+(define-record-printer (cjson x out)
+  (display "#<cjson " out)
+  (display (cjson->string x #f) out)
+  (display ">" out))
+
 )
