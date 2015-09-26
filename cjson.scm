@@ -49,7 +49,7 @@
 ;; no error checking!
 (define cjson-type   (foreign-lambda* int      ((cjson x)) "return(x->type);"))
 (define cjson-int    (foreign-lambda* int      ((cjson x)) "return(x->valueint);"))
-(define cjson-double (foreign-lambda* int      ((cjson x)) "return(x->valuedouble);"))
+(define cjson-double (foreign-lambda* double   ((cjson x)) "return(x->valuedouble);"))
 (define cjson-string (foreign-lambda* c-string ((cjson x)) "return(x->valuestring);"))
 (define cjson-key    (foreign-lambda* c-string ((cjson x)) "return(x->string);"))
 
