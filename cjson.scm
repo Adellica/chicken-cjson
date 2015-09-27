@@ -38,13 +38,13 @@
    cjson))
 
 
-(define cJSON_False  0)
-(define cJSON_True   1)
-(define cJSON_NULL   2)
-(define cJSON_Number 3)
-(define cJSON_String 4)
-(define cJSON_Array  5)
-(define cJSON_Object 6)
+(define cjson/false  0)
+(define cjson/true   1)
+(define cjson/null   2)
+(define cjson/number 3)
+(define cjson/string 4)
+(define cjson/array  5)
+(define cjson/object 6)
 
 ;; no error checking!
 (define cjson-type   (foreign-lambda* int      ((cjson x)) "return(x->type);"))
@@ -73,20 +73,23 @@
 ;; array => vector
 ;; obj => alist
 (define (cjson-schemify cjson)
-  (case (cjson-type cjson)
-    ((0) #f)
-    ((1) #t)
-    ((2) (void))               ;; null
-    ((3) (cjson-double cjson)) ;; cJSON_Number
-    ((4) (cjson-string cjson))
-    ((5) (list->vector
-          (map cjson-schemify (list-tabulate (cjson-array-size cjson)
-                                             (lambda (i) (cjson-array-ref cjson i))))))
-    ((6) (map (lambda (key)
-                (cons (string->symbol key)
-                      (cjson-schemify (cjson-obj-ref cjson key))))
-              (cjson-obj-keys cjson)))
-    (else (error "unknown cjson type" (cjson-type cjson)))))
+  (select
+   (cjson-type cjson)
+   ((cjson/false) #f)
+   ((cjson/true)  #t)
+   ((cjson/null) (void))                        ;; null
+   ((cjson/number) (cjson-double cjson))        ;; cjson-number
+   ((cjson/string) (cjson-string cjson))
+   ((cjson/array)
+    (list->vector
+     (map cjson-schemify (list-tabulate (cjson-array-size cjson)
+                                        (lambda (i) (cjson-array-ref cjson i))))))
+   ((cjson/object)
+    (map (lambda (key)
+           (cons (string->symbol key)
+                 (cjson-schemify (cjson-obj-ref cjson key))))
+         (cjson-obj-keys cjson)))
+   (else (error "unknown cjson type" (cjson-type cjson)))))
 
 ;; finalizers are expensive. this version avoids their use:
 (define (string->json str)
