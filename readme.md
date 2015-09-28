@@ -208,4 +208,4 @@ parsing a lot of JSON, but only a small part of that needs to go back
 into scheme.
 
 Note that this example works because we have one JSON object per line,
-effectively giving us a json-object delimitar.
+effectively giving us a json-object delimiter.
