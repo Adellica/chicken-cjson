@@ -1,2 +1,7 @@
 ;; -*- scheme -*-
-((author "Adellica"))
+((license "BSD")
+ (category parsing)
+ (depends)
+ (test-depends test)
+ (author "Adellica")
+ (synopsis "JSON parsing done in C. Sometimes a good idea."))
