@@ -5,6 +5,7 @@ chicken-cjson
  [cjson]: https://github.com/kbranigan/cJSON
  [medea]: http://wiki.call-cc.org/eggref/4/medea
  [json]: http://wiki.call-cc.org/eggref/4/json
+ [jq]: https://stedolan.github.io/jq/
 
 [Chicken Scheme] bindings for the JSON parser [cjson]. chicken-cjson
 offers a significant performance improvement over [medea] and [json],
@@ -202,7 +203,7 @@ sys     0m0.017s
 ```
 
 In this particular run, CJSON is 25 times faster than medea and
-performas as well as `jq`. This would be in situations where you are
+performas as well as [jq]. This would be in situations where you are
 parsing a lot of JSON, but only a small part of that needs to go back
 into scheme.
 
