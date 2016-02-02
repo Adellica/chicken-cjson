@@ -3,7 +3,7 @@
 (import chicken scheme foreign)
 (use srfi-1)
 
-(foreign-declare "#include \"cJSON.c\"")
+(foreign-declare "#include \"cJSON/cJSON.c\"")
 
 (define-record-type cjson (%make-cjson pointer)
   %cjson?
