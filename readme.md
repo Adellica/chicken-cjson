@@ -160,7 +160,7 @@ sys     0m0.017s
 
 That's four times faster. Probably doesn't justify sacrificing a
 convenient API. In some cases, though, parsing JSON in C and using
-it's combersome API can pay off:
+its combersome API can pay off:
 
 ```bash
 $ JSON='{"field" : {"id" : "ID"} , "a":1, "b":2, "c":[1,{"x":{"y":"y"}},3],"d":{"e":[]}}'
