@@ -8,7 +8,7 @@
  (test "number" 12.5 (string->json "12.5"))
  (test "false" #f (string->json "false"))
  (test "true" #t (string->json "true"))
- (test "null" (void) (string->json "null"))
+ (test "null" 'null (string->json "null"))
 
  (test "nested"
        '#( ((b . 2.0)

@@ -97,7 +97,7 @@ Exposes the cjson-type constants.
 (select (cjson-type cjson)
    ((cjson/false) #f)
    ((cjson/true)  #t)
-   ((cjson/null) (void))
+   ((cjson/null) 'null)
    ((cjson/number) (cjson-double cjson))
    ((csjon/string) (cjson-string cjson))
    (else (error "probably a vector or object")))

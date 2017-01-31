@@ -69,7 +69,7 @@
         res)))
 
 ;; number => number, string => string
-;; nil => (void), true/false => #t/#f
+;; nil => 'null, true/false => #t/#f
 ;; array => vector
 ;; obj => alist
 (define (cjson-schemify cjson)
@@ -77,8 +77,8 @@
    (cjson-type cjson)
    ((cjson/false) #f)
    ((cjson/true)  #t)
-   ((cjson/null) (void))                        ;; null
-   ((cjson/number) (cjson-double cjson))        ;; cjson-number
+   ((cjson/null) 'null)                  ;; same as medea
+   ((cjson/number) (cjson-double cjson)) ;; cjson-number
    ((cjson/string) (cjson-string cjson))
    ((cjson/array)
     (list->vector
