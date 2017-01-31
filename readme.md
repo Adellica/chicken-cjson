@@ -7,37 +7,59 @@ chicken-cjson
  [json]: http://wiki.call-cc.org/eggref/4/json
  [jq]: https://stedolan.github.io/jq/
 
-[Chicken Scheme] bindings for the JSON parser [cjson]. chicken-cjson
-offers a significant performance improvement over [medea] and [json],
-but comes with a major drawback: all data must be availabe as a
-string. This means you cannot parse JSON coming from a port unless you
-know how much data to hand over to chicken-cjson.
+[Chicken Scheme] bindings for the JSON parser [cjson]. It cannot read
+from ports and must have the entire JSON object in memory. It only
+parses JSON, does not serialize.
 
-chicken-cjson offers an alternative API which exposes a JSON c-struct
-as a `#<cjson>` scheme record. This is for performance reasons and
-allows you to pick apart JSON objects using lolevel C-functions,
-without transitioning into scheme objects. This is a little faster but
-is a lot more verbose.
+The `string->json` procedure returns the same datastrucures as
+`medea`'s, `read-json`, so if you're passing that strings already,
+`string->json` should be a drop-in replacement:
 
-The `#<cjson>` record-printer will output the object's JSON
-representaion for easier debugging:
-
-```bash
-$ csi -R cjson -p '(string->cjson "[1,2,3]")'
-#<cjson [1,2,3]>
 ```
+$ printf '{"array":[1,2,3],"null":null}' | csi -R cjson -p '(string->json (read-line))'
+((null . null) (array . #(1.0 2.0 3.0)))
+$ printf '{"array":[1,2,3],"null":null}' | csi -R medea -p '(read-json (read-line))'
+((array . #(1 2 3)) (null . null))
+```
+
+`chicken-cjson` may offer a significant performance improvement over
+[medea] and [json], but comes at a price: all data must be availabe as
+a string. This means you cannot parse JSON coming in from a port
+directly, and that's why there is no `read-json` here.
+
+`chicken-cjson` offers an alternative API which exposes a JSON c-struct
+as a `#<cjson>` scheme record, and accompanying procedures like
+`cjson-string`. This is for performance reasons and allows you to pick
+apart JSON objects using lolevel C-functions, without transitioning
+into the Scheme data-structure. This may be faster but is a lot uglier:
+
+```
+$ printf '{"array":[1,2,3],"null":null}' |\
+  csi -R cjson -p '(cjson-double (cjson-array-ref (cjson-obj-ref (string->cjson (read-line)) "array") 1))'
+2.0
+```
+
+Note that cjson doesn't have fixnums so all numbers are double
+floating point numbers.
 
 ## Requirements
 
 None. [cjson] comes bundled.
 
+## TODO
+
+- Make `with-cjson` that allocates and deallocates in block, and does
+  it fast?
+- Make a common JSON API for all json parsers in CHICKEN?
+
 ## API
 
     [procedure] (string->cjson string)
 
-Parse the string and return a `#<cjson>` record which holds a c-struct
-representing the JSON. The returned record has a finalizer attached to
-it so the underlying c-struct gets freed on garbage collection.
+Note that that's not `string->json`! Parses the string and returns a
+`#<cjson>` record which holds a c-struct representing the JSON. The
+returned record has a finalizer attached to it so the underlying
+c-struct gets freed on garbage collection.
 
     [procedure] (string->cjson* string)
 
@@ -50,7 +72,8 @@ objects.
     [procedure] (cjson->string cjson [pretty-print?])
 
 Convert the `#<cjson>` object to its JSON-representation, returned as
-a string. `pretty-print?` defaults to true.
+a string. `pretty-print?` defaults to true. Note that this can only
+serialize cjson records, and not scheme objects.
 
     [procedure] (cjson-schemify cjson)
 
