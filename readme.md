@@ -15,7 +15,7 @@ The `string->json` procedure returns the same datastrucures as
 `medea`'s, `read-json`, so if you're passing that strings already,
 `string->json` should be a drop-in replacement:
 
-```
+```bash
 $ printf '{"array":[1,2,3],"null":null}' | csi -R cjson -p '(string->json (read-line))'
 ((null . null) (array . #(1.0 2.0 3.0)))
 $ printf '{"array":[1,2,3],"null":null}' | csi -R medea -p '(read-json (read-line))'
@@ -33,7 +33,7 @@ as a `#<cjson>` scheme record, and accompanying procedures like
 apart JSON objects using lolevel C-functions, without transitioning
 into the Scheme data-structure. This may be faster but is a lot uglier:
 
-```
+```bash
 $ printf '{"array":[1,2,3],"null":null}' |\
   csi -R cjson -p '(cjson-double (cjson-array-ref (cjson-obj-ref (string->cjson (read-line)) "array") 1))'
 2.0
