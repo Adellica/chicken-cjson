@@ -48,6 +48,10 @@ None. [cjson] comes bundled.
 
 ## TODO
 
+- Make `cjson-schemify` faster yet by avoiding the O(n) procedures
+  `cjson-obj-ref` and `cjson-array-ref`
+- Update to [cjson] version [1.2.1](https://github.com/DaveGamble/cJSON/releases/tag/v1.2.1)
+- Add support for modifying `cjson` records like `cJSON_AddItemToArray`
 - Make `with-cjson` that allocates and deallocates in block, and does
   it fast?
 - Make a common JSON API for all json parsers in CHICKEN?
