@@ -2,7 +2,7 @@ chicken-cjson
 ===============
 
  [Chicken Scheme]: http://call-cc.org/
- [cjson]: https://github.com/kbranigan/cJSON
+ [cjson]: https://github.com/DaveGamble/cJSON
  [medea]: http://wiki.call-cc.org/eggref/4/medea
  [json]: http://wiki.call-cc.org/eggref/4/json
  [jq]: https://stedolan.github.io/jq/
