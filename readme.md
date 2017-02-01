@@ -8,8 +8,8 @@ chicken-cjson
  [jq]: https://stedolan.github.io/jq/
 
 [Chicken Scheme] bindings for the JSON parser [cjson]. It cannot read
-from ports and must have the entire JSON object in memory. It only
-parses JSON, does not serialize.
+from ports and must have the entire JSON object in
+memory. `chicken-cjson` only parses JSON, does not serialize.
 
 The `string->json` procedure returns the same datastrucures as
 `medea`'s, `read-json`, so if you're passing that strings already,
