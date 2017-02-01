@@ -39,8 +39,8 @@ $ printf '{"array":[1,2,3],"null":null}' |\
 2.0
 ```
 
-Note that [cjson] doesn't have fixnums so all numbers are double
-floating point numbers.
+Note that if you know that a number is fixnum, you can use `cjson-int`
+instead.
 
 ## Requirements
 
@@ -110,6 +110,7 @@ Pick out the type of a [cjson] record. Returns a fixnum.
 
 Exposes the [cjson]-type constants.
 
+    [procedure] (cjson-int cjson)
     [procedure] (cjson-double cjson)
     [procedure] (cjson-string cjson)
     [procedure] (cjson-key cjson)
