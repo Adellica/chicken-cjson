@@ -39,7 +39,7 @@ $ printf '{"array":[1,2,3],"null":null}' |\
 2.0
 ```
 
-Note that cjson doesn't have fixnums so all numbers are double
+Note that [cjson] doesn't have fixnums so all numbers are double
 floating point numbers.
 
 ## Requirements
@@ -73,7 +73,7 @@ objects.
 
 Convert the `#<cjson>` object to its JSON-representation, returned as
 a string. `pretty-print?` defaults to true. Note that this can only
-serialize cjson records, and not scheme objects.
+serialize [cjson] records, and not scheme objects.
 
     [procedure] (cjson-schemify cjson)
 
@@ -83,7 +83,7 @@ data-structures are the same as [medea]'s, where `array => vector` and
 
     [procedure] (string->json string)
 
-Make scheme data-structures of the json data in `string` using CJSON:
+Make scheme data-structures of the json data in `string` using [cjson]:
 
 ```scheme
 (define (string->json str)
@@ -98,7 +98,7 @@ For string inputs, this should be API-equivalent of [medea]'s
 
     [procedure] (cjson-type cjson)
 
-Pick out the type of a CJSON record. Returns a fixnum.
+Pick out the type of a [cjson] record. Returns a fixnum.
 
     [variable] cjson/false
     [variable] cjson/true
@@ -108,7 +108,7 @@ Pick out the type of a CJSON record. Returns a fixnum.
     [variable] cjson/array
     [variable] cjson/object
 
-Exposes the cjson-type constants.
+Exposes the [cjson]-type constants.
 
     [procedure] (cjson-double cjson)
     [procedure] (cjson-string cjson)
@@ -128,7 +128,7 @@ Exposes the cjson-type constants.
 
     [procedure] (cjson-array-size cjson)
 
-Return the number of elements in the array. If `cjson`'s type is not
+Return the number of elements in the array. If [cjson]'s type is not
 an array, this is undefined bahaviour.
 
     [procedure] (cjson-array-ref cjson index)
@@ -145,11 +145,12 @@ behaviour if `cjson` is not of type `cjosn/object`.
 ## Performance
 
 The performance characteristics of JSON parsing is mysterious. It is
-recommended to use [medea] or [json] for normal usage because they
-integrate better with the scheme-world. For particular cases, however,
-there may be significant performace improvements in using cjson.
+recommended to use [medea] or [json] in most usage-cases because they
+can parse directly off ports and they also serialize. For particular
+cases, however, there may be significant performace improvements in
+using [cjson].
 
-Sometimes medea is faster than cjson:
+Sometimes the speedup is negligible:
 
 ```bash
 $ (echo '[' ; for i in {0..1000} ; do echo '"str", 1, 2, 3, 4,' ; done ; echo ' 0]') > bigjson
@@ -165,7 +166,8 @@ user    0m0.103s
 sys     0m0.010s
 ```
 
-The slowdown could be because of `read-string`'s memory allocations. cjson may shine when you already have the JSON data in memory:
+Here, having to doing a `read-string` first isn't great. [cjson] may
+shine when you already have the JSON data as a string:
 
 ```bash
 $ for i in {0..100000} ; do echo '{"field" : {"id" : 1}}' ; done > jsonlines
@@ -181,9 +183,8 @@ user    0m1.083s
 sys     0m0.017s
 ```
 
-That's four times faster. Probably doesn't justify sacrificing a
-convenient API. In some cases, though, parsing JSON in C and using
-its combersome API can pay off:
+That's four times faster. In some cases, though, keeping the
+`#<cjson>` record and using its combersome API can pay off:
 
 ```bash
 $ JSON='{"field" : {"id" : "ID"} , "a":1, "b":2, "c":[1,{"x":{"y":"y"}},3],"d":{"e":[]}}'
@@ -225,10 +226,10 @@ user    0m0.500s
 sys     0m0.017s
 ```
 
-In this particular run, CJSON is 25 times faster than medea and
-performas as well as [jq]. This would be in situations where you are
-parsing a lot of JSON, but only a small part of that needs to go back
-into scheme.
+In this particular run, `chicken-cjson` is 25 times faster than medea,
+and performas about as well as [jq]. This speedup typically only
+happens where you are parsing a lot of JSON, but only a small part of
+that needs to go back into scheme. Also, this only works because we
+have one JSON object per line, effectively giving us a json-object
+delimiter.
 
-Note that this example works because we have one JSON object per line,
-effectively giving us a json-object delimiter.
