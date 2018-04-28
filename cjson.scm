@@ -1,7 +1,10 @@
 (module cjson *
 
-(import chicken scheme foreign)
-(use srfi-1)
+(import scheme
+	(chicken base)
+	(chicken foreign)
+	(only (chicken gc) set-finalizer!)
+	srfi-1)
 
 (foreign-declare "#include \"cJSON/cJSON.c\"")
 
@@ -73,18 +76,18 @@
 ;; array => vector
 ;; obj => alist
 (define (cjson-schemify cjson)
-  (select
-   (cjson-type cjson)
-   ((cjson/false) #f)
-   ((cjson/true)  #t)
-   ((cjson/null) 'null)                  ;; same as medea
-   ((cjson/number) (cjson-double cjson)) ;; cjson-number
-   ((cjson/string) (cjson-string cjson))
-   ((cjson/array)
+  (define (is v) (= v (cjson-type cjson)))
+  (cond
+   ((is cjson/false) #f)
+   ((is cjson/true)  #t)
+   ((is cjson/null) 'null)                  ;; same as medea
+   ((is cjson/number) (cjson-double cjson)) ;; cjson-number
+   ((is cjson/string) (cjson-string cjson))
+   ((is cjson/array)
     (list->vector
      (map cjson-schemify (list-tabulate (cjson-array-size cjson)
                                         (lambda (i) (cjson-array-ref cjson i))))))
-   ((cjson/object)
+   ((is cjson/object)
     (map (lambda (key)
            (cons (string->symbol key)
                  (cjson-schemify (cjson-obj-ref cjson key))))

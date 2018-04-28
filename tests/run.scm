@@ -1,4 +1,4 @@
-(use cjson test)
+(import cjson test)
 
 (test-group
  "string->json"

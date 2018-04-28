@@ -1,0 +1,8 @@
+;; -*- scheme -*-
+((license "BSD")
+ (category parsing)
+ (dependencies)
+ (test-dependencies test)
+ (author "Adellica")
+ (synopsis "JSON parsing done in C. Sometimes a good idea.")
+ (components (extension cjson)))
