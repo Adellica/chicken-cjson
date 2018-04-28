@@ -96,7 +96,8 @@
 
 ;; finalizers are expensive. this version avoids their use:
 (define (string->json str)
-  (let* ((j (string->cjson* str))
+  (let* ((j (or (string->cjson* str)
+		(error "unable to parse json" str)))
          (s (cjson-schemify j)))
     (cjson-free j)
     s))
