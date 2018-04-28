@@ -1,3 +1,7 @@
 /cjson.import.scm
 /cjson.import.so
 /cjson.so
+/cjson.build.sh
+/cjson.install.sh
+/cjson.link
+/cjson.static.o
