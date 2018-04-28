@@ -196,7 +196,7 @@ $ JSON='{"field" : {"id" : "ID"} , "a":1, "b":2, "c":[1,{"x":{"y":"y"}},3],"d":{
 $ for i in {0..100000} ; do echo $JSON ; done > jsonlines
 $ for f in test*.scm ; do echo ===== $f === ; cat $f ; done
 ===== test-cjson.scm ===
-(use cjson ports)
+(import cjson ports)
 
 (port-for-each
  (lambda (line)
@@ -206,7 +206,7 @@ $ for f in test*.scm ; do echo ===== $f === ; cat $f ; done
  read-line)
 
 ===== test-medea.scm ===
-(use medea ports)
+(import medea ports)
 
 (port-for-each
  (lambda (line)
