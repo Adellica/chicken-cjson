@@ -1,7 +1,7 @@
 ;; -*- scheme -*-
 ((license "BSD")
  (category parsing)
- (dependencies)
+ (dependencies srfi-1)
  (test-dependencies test)
  (author "Adellica")
  (synopsis "JSON parsing done in C. Sometimes a good idea.")
